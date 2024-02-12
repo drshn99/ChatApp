@@ -1,2 +1,0 @@
-# ChatApp
-Java Chat Application 

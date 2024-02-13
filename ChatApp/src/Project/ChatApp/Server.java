@@ -99,9 +99,9 @@ public class Server implements Runnable{
 		public void run() {
 			
 			try {
-				//initilize print writer we need output and autoflush is true we dont need to manually flush the stream in order to send the messages
+				//initialize print writer we need output and autoflush is true we dont need to manually flush the stream in order to send the messages
 				out=new PrintWriter(client.getOutputStream(), true);
-				//initilize 
+				//initialize 
 				in= new BufferedReader(new InputStreamReader(client.getInputStream()));
 				
 				//send to client

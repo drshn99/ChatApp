@@ -13,7 +13,7 @@ public class Client implements Runnable{
 	private BufferedReader in;
 	private PrintWriter out;
 	private boolean done;
-	
+	private ChatFrame chat = new ChatFrame();
 	//In the run method, it connects to the server at the IP address "127.0.0.1" and port 9999.
 	//It initializes input and output streams, starts an InputHandler thread to handle user input, and continuously reads and prints messages from the server.
 	@Override
@@ -27,6 +27,7 @@ public class Client implements Runnable{
 		t.start();
 		
 		String inMessage;
+		
 		while((inMessage=in.readLine())!=null) {
 			System.out.println(inMessage);
 		}
@@ -77,7 +78,11 @@ public class Client implements Runnable{
 	}
 	//The main method creates an instance of the Client class and calls its run method to start the client.
 	public static void main(String[] args) {
+		
+		
 		Client client=new Client();
 		client.run();
+		
+		ChatFrame clientFrame = new ChatFrame();
 	}
 }

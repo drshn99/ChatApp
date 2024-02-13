@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +22,7 @@ public class Server implements Runnable {
 	private ServerSocket server;
 	private boolean done;
 	private ExecutorService pool;
-	private List<String> messageList = new ArrayList<>();
+	private static List<String> messageList = new ArrayList<>();
 
 	public Server() {
 		connections = new ArrayList<>();
@@ -57,7 +58,13 @@ public class Server implements Runnable {
 
 	// broadcast function for messages to all the connected clients
 	public void broadcast(String message) {
-		messageList.add(message);
+		if (messageList.size() < 30) {
+			messageList.add(message);
+		} else {
+			Collections.rotate(messageList, -1);
+			messageList.set(29, message);
+		}
+
 		writeToFile();
 		for (ConnectionHandler ch : connections) {
 			if (ch != null) {
@@ -83,7 +90,7 @@ public class Server implements Runnable {
 	}
 
 	// Read in the message history and save to list
-	public void readFromFile() {
+	public static void readFromFile() {
 		try (BufferedReader reader = new BufferedReader(new FileReader("chat_history.txt"))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -196,7 +203,7 @@ public class Server implements Runnable {
 	// The main method creates an instance of the Server class and calls its run
 	// method to start the server.
 	public static void main(String[] args) {
-
+		readFromFile();
 		Server server = new Server();
 		server.run();
 	}

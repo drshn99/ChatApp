@@ -23,6 +23,7 @@ public class Server implements Runnable {
 	private boolean done;
 	private ExecutorService pool;
 	private static List<String> messageList = new ArrayList<>();
+	public final int MAX_MESSAGE_HISTORY = 30;
 
 	public Server() {
 		connections = new ArrayList<>();
@@ -58,11 +59,11 @@ public class Server implements Runnable {
 
 	// broadcast function for messages to all the connected clients
 	public void broadcast(String message) {
-		if (messageList.size() < 30) {
+		if (messageList.size() < MAX_MESSAGE_HISTORY) {
 			messageList.add(message);
 		} else {
 			Collections.rotate(messageList, -1);
-			messageList.set(29, message);
+			messageList.set(MAX_MESSAGE_HISTORY - 1, message);
 		}
 
 		writeToFile();

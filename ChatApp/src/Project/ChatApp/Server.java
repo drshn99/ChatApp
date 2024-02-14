@@ -36,10 +36,10 @@ public class Server implements Runnable {
 
 	@Override
 	public void run() {
-	
+
 
 		try {
-			
+
 			// server socket for server in java we only need port number we dont need IP
 			// unless we need one manually
 			server = new ServerSocket(9999);
@@ -61,7 +61,7 @@ public class Server implements Runnable {
 
 	// broadcast function for messages to all the connected clients
 	public void broadcast(String message) {
-		
+
 		if (messageList.size() < MAX_MESSAGE_HISTORY) {
 			messageList.add(message);
 		} else {
@@ -95,7 +95,10 @@ public class Server implements Runnable {
 
 	// Read in the message history and save to list
 	public static void readFromFile() {
-		try (BufferedReader reader = new BufferedReader(new FileReader("/Java_Workspace/ChatApp/ChatApp/src/Project/ChatApp/resources/chat_history.txt"))) {
+
+
+		try (BufferedReader reader = new BufferedReader(new FileReader("chat_history.txt"))) {
+
 			String line;
 			while ((line = reader.readLine()) != null) {
 				messageList.add(line);
@@ -128,7 +131,6 @@ public class Server implements Runnable {
 		private BufferedReader in;
 		// Write something to client/output
 		private PrintWriter out;
-
 		private String nickname;
 
 		// Constructor
@@ -140,20 +142,16 @@ public class Server implements Runnable {
 		// a nickname, and broadcasts the join message to all clients.
 		public void run() {
 			
-			ChatFrame chat = new ChatFrame();
 
 			try {
-				// initialize print writer we need output and autoflush is true we don't need to
+				// initilize print writer we need output and autoflush is true we dont need to
 				// manually flush the stream in order to send the messages
 				out = new PrintWriter(client.getOutputStream(), true);
-				// initialize
+				// initilize
 				in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
 				// send to client
-				chat.chatText.append("Please enter a nickname: ");
-				
-				chat.pack();
-				chat.setVisible(done);
+
 				out.println("Please enter a nickname: ");
 				nickname = in.readLine();
 				System.out.println(nickname + " connected");
@@ -187,8 +185,9 @@ public class Server implements Runnable {
 			} catch (IOException e) {
 				shutdown();
 			}
-
 		}
+
+		
 
 		// Function to send message
 		public void sendMessage(String message) {

@@ -60,7 +60,7 @@ public class Server implements Runnable {
 	}
 
 	// broadcast function for messages to all the connected clients
-	public void broadcast(String message) {
+	public void broadcast(ChatFrame chat, String message) {
 
 		if (messageList.size() < MAX_MESSAGE_HISTORY) {
 			messageList.add(message);
@@ -73,6 +73,7 @@ public class Server implements Runnable {
 		for (ConnectionHandler ch : connections) {
 			if (ch != null) {
 				ch.sendMessage(message);
+				chat.appendText(message);
 			}
 		}
 	}
@@ -144,42 +145,57 @@ public class Server implements Runnable {
 			
 
 			try {
-				// initilize print writer we need output and autoflush is true we dont need to
+				// initialize print writer we need output and autoflush is true we dont need to
 				// manually flush the stream in order to send the messages
+				
+				System.out.println("First try block in server.run reached");
 				out = new PrintWriter(client.getOutputStream(), true);
-				// initilize
+				// initialize
 				in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
 				// send to client
-
+				ChatFrame chat = new ChatFrame("Server", out);
+				
+				chat.chatHistory.append("Please enter a nickname: ");
+				nickname=chat.message;
+				chat.setTitle(nickname);
+				chat.appendText(nickname + " connected");
+				
+				chat.appendText("Please enter a nickname: ");
 				out.println("Please enter a nickname: ");
+				nickname = chat.message;
 				nickname = in.readLine();
 				System.out.println(nickname + " connected");
 
 				// looping block to print message history to client
 				for (int i = 0; i < messageList.size(); i++) {
+					chat.appendText(messageList.get(i));
 					out.println(messageList.get(i));
 				}
 
-				broadcast(nickname + " joined the chat!");
+				broadcast(chat, nickname + " joined the chat!");
 
 				String message;
-				while ((message = in.readLine()) != null) {
+				while (((message = in.readLine()) != null) && chat.message != "/quit") {
 					if (message.startsWith("/nick ")) {
 						String[] messageSplit = message.split(" ", 2);
 						if (messageSplit.length == 2) {
-							broadcast(nickname + " renamed themselves to " + messageSplit[1]);
+							
+							broadcast(chat, nickname + " renamed themselves to " + messageSplit[1]);
 							System.out.println(nickname + " renamed themselves to " + messageSplit[1]);
 							nickname = messageSplit[1];
+							chat.setTitle(nickname);
+							chat.appendText("Successfully changed nickname to " + nickname);
 							out.println("Successfully changed nickname to " + nickname);
 						} else {
+							chat.appendText("No nickname provided!");
 							out.println("No nickname provided!");
 						}
 					} else if (message.startsWith("/quit")) {
-						broadcast(nickname + " left the chat");
+						broadcast(chat, nickname + " left the chat");
 						shutdown();
 					} else {
-						broadcast(nickname + ": " + message);
+						broadcast(chat, nickname + ": " + message);
 					}
 				}
 			} catch (IOException e) {

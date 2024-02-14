@@ -14,10 +14,12 @@ public class Client implements Runnable{
 	private PrintWriter out;
 	private boolean done;
 	private ChatFrame chat = new ChatFrame();
+	
 	//In the run method, it connects to the server at the IP address "127.0.0.1" and port 9999.
 	//It initializes input and output streams, starts an InputHandler thread to handle user input, and continuously reads and prints messages from the server.
 	@Override
 	public void run() {
+		
 		try {
 			client =new Socket("127.0.0.1", 9999);
 			out =new PrintWriter(client.getOutputStream(),true);

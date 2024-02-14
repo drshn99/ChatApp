@@ -28,7 +28,7 @@ public class ChatFrame extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	
 	public JLabel titleLabel = new JLabel();
-	public JTextPane chatHistory = new JTextPane();
+	public JTextArea chatHistory = new JTextArea();
 	public JScrollPane scrollBox = new JScrollPane();
 	public JTextPane chatters = new JTextPane();
 	public JTextArea chatText = new JTextArea();
@@ -80,11 +80,12 @@ public class ChatFrame extends JFrame implements ActionListener{
 	this.add(titleLabel, c);
 	
 	chatHistory.setBackground(Color.white);
+	chatHistory.setText("Initializing Chat Window...");
 	chatHistory.setOpaque(true);
 	chatHistory.setVisible(true);
 	chatHistory.setBorder(grayline);
 	chatHistory.setSize(400,300);
-	chatHistory.setText("Let's just see if this shows");
+	
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
 	c.gridy = 1;
@@ -126,6 +127,7 @@ public class ChatFrame extends JFrame implements ActionListener{
 	
 	chatText.setBackground(Color.white);
 	chatText.setForeground(Color.black);
+	chatText.setText("Initializing Text Area...");
 	chatText.setOpaque(true);
 	chatText.setVisible(true);
 	chatText.setBorder(grayline);
